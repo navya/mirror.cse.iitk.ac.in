@@ -1,0 +1,24 @@
+#!/bin/bash
+
+################################################################
+# Parameters
+# ----------
+
+emailMe=ppk@cse.iitk.ac.in	# who all to email details
+
+webSpace=/mirror-root/mirrors/toc/
+rsyncHost=mirror.theoryofcomputing.org
+rsyncLoc=toc
+
+function doRsync()
+{
+	echo -n I ran on " " ; date -u
+	[ -d $webSpace ]||{ echo Warning: webarea $webSpace not mounted. ; \
+			    echo exiting without syncing; exit 1 ; }
+	echo $webSpace mounted performing rsync 
+	rsync --delete --delete-after --safe-links -av "$rsyncHost::toc/" "$webSpace" 2>&1 
+}
+
+#doRsync
+doRsync  | mail -s '[mirror] toc update' $emailMe
+
